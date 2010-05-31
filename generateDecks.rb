@@ -21,26 +21,26 @@ require "lib.romanNumeral.rb"
 MAJOR_ARCANA_CARDS = <<-eos
 
 The Fool
-The Magician / The Juggler
-The High Priestess / The Popess
+The Magician
+The High Priestess
 The Empress
 The Emperor
-The Hierophant / The Pope
+The Hierophant
 The Lovers
 The Chariot
-Justice
+Strength
 The Hermit
 Wheel of Fortune
-Strength / Fortitude
-The Hanged Man / The Traitor
+Justice
+The Hanged Man
 Death
 Temperance
 The Devil
-The Tower / Fire
+The Tower
 The Star
 The Moon
 The Sun
-Judgement / The Angel
+Judgement
 The World
 
 eos
@@ -50,7 +50,7 @@ eos
 
 
 Minor_Arcana_Count = 14
-Minor_Arcana_Sets = ["Staves", "Pentacles", "Chalices", "Swords"]
+Minor_Arcana_Sets = ["Wands", "Pentacles", "Cups", "Swords"]
 
 
 
@@ -68,10 +68,10 @@ Minor_Arcana_Personae = {
 	7 => "Eight",
 	8 => "Nine",
 	9 => "Ten",
-	10 => "Prince",
-	11 => "Princess",
-	12 => "King",
-	13 => "Queen"
+	10 => "Page",
+	11 => "Knight",
+	12 => "Queen",
+	13 => "King"
 
 }
 
