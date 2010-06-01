@@ -148,7 +148,7 @@ require "lib.romanNumeral.rb"
 			
 				"#{Deck['Minor Arcana']['Personae'][cardIndex]} of #{theSetName}",
 				cardIndex,
-				theSetName
+				'Minor Arcana'
 				
 			))
 			
@@ -156,7 +156,7 @@ require "lib.romanNumeral.rb"
 		
 		Output['Sequels'].push(
 	
-			"Alignment" => "Minor Arcana",
+			"Alignment" => 'Minor Arcana',
 			"Cards" => sequel,
 			"Name" => theSetName,
 			"Sequel" => theSetName
