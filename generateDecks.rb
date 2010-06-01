@@ -25,6 +25,7 @@ require "lib.romanNumeral.rb"
 	
 		"Title" => "Rider-Smith-Waite",
 		"Reversible" => true,
+		"Dimensions" => [320, 520],
 	
 		"Major Arcana" => [
 		
@@ -95,7 +96,8 @@ require "lib.romanNumeral.rb"
 		"Predicate" => {
 	
 			:title => "Rider-Smith-Waite",
-			:reversible => true
+			:reversible => true,
+			:dimensions => Deck['Dimensions']
 	
 		}, 
 		
