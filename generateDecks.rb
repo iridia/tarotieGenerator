@@ -55,7 +55,7 @@ require "lib.romanNumeral.rb"
 		"title" => title,
 		"sequelString" => sequelString.to_s,
 		"alignment" => alignment,
-		"relativeImagePathURL" => "#{strip(alignment)} - #{strip(title)}.png"
+		"relativeImagePathURL" => "#{strip(alignment)}-#{strip(title)}.png"
 		
 	} end
 	
