@@ -8,7 +8,7 @@ require 'rubygems'
 gem 'plist', '~> 3.1.0'
 require 'Plist'
 
-require "lib.romanNumeral.rb"
+require "./lib.romanNumeral.rb"
 
 
 
@@ -51,10 +51,11 @@ require "lib.romanNumeral.rb"
 
 #	Helpers
 
-	def card (title, sequelString, alignment = "Major Arcana") {
+	def card (title, sequelString, sequelNumber, alignment = "Major Arcana") {
 		
 		"title" => title,
 		"sequelString" => sequelString.to_s,
+		"sequelNumber" => sequelNumber.to_i,
 		"alignment" => alignment,
 		"relativeImagePathURL" => "#{strip(alignment)}-#{strip(title)}.png"
 		
@@ -119,6 +120,7 @@ require "lib.romanNumeral.rb"
 		
 			Deck['Major Arcana'][cardIndex], 
 			cardIndex.to_i.to_roman, 
+			cardIndex.to_i,
 			"Major Arcana"
 		
 		))
@@ -144,11 +146,12 @@ require "lib.romanNumeral.rb"
 	
 		sequel = []
 
-		Deck['Minor Arcana']['Personae'].each_index { |cardIndex|
+		Deck['Minor Arcana']['Personae'].each_with_index { |cardValue, cardIndex|
 		
 			sequel.push(card(
 			
 				"#{Deck['Minor Arcana']['Personae'][cardIndex]} of #{theSetName}",
+				cardValue,
 				cardIndex,
 				'Minor Arcana'
 				
