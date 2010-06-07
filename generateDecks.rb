@@ -8,7 +8,7 @@ require 'rubygems'
 gem 'plist', '~> 3.1.0'
 require 'Plist'
 
-require "./lib.romanNumeral.rb"
+require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 
 
 
@@ -23,11 +23,15 @@ require "./lib.romanNumeral.rb"
 
 	Deck = {
 	
-		"Title" => "Rider-Smith-Waite",
-		"Reversible" => true,
-		"Dimensions" => [320, 520],
+		"Predicate" => {
 	
-		"Major Arcana" => [
+			"Title" => "Rider-Smith-Waite",
+			"Reversible" => true,
+			"Dimensions" => [320, 520],
+			"HasCardBack" => true,
+			"BlankCards" => 0
+		
+		}, "Major Arcana" => [
 		
 			"The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor", "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit", "Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance", "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgement", "The World"
 			
@@ -94,14 +98,7 @@ require "./lib.romanNumeral.rb"
 
 	Output = {
 	
-		"Predicate" => {
-	
-			:title => "Rider-Smith-Waite",
-			:reversible => true,
-			:dimensions => Deck['Dimensions']
-	
-		}, 
-		
+		"Predicate" => Deck['Predicate'], 
 		"Sequels" => []
 		
 	}
