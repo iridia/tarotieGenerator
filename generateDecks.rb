@@ -27,9 +27,7 @@ require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 	
 			"Title" => "Rider-Smith-Waite",
 			"Reversible" => true,
-			"Dimensions" => [320, 520],
-			"HasCardBack" => true,
-			"BlankCards" => 0
+			"Dimensions" => [320, 520]
 		
 		}, "Major Arcana" => [
 		
@@ -61,7 +59,7 @@ require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 		"sequelString" => sequelString.to_s,
 		"sequelNumber" => sequelNumber.to_i,
 		"alignment" => alignment,
-		"relativeImagePathURL" => "#{strip(alignment)}-#{strip(title)}.png"
+		"imageFileName" => "#{strip(alignment)}-#{strip(title)}.png"
 		
 	} end
 	
