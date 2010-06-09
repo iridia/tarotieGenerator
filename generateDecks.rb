@@ -61,13 +61,13 @@ xcode = Xcode.new
 
 #	Bail on nil argument / empty directory
 
-if ( ARGV.empty? || ARGV[0].empty?)
-
-	xcode.warn "please call generateDecks.rb with 1 argument that is the absolute path pointing to the Decks directory."
-
-end
-
-puts "#{ARGV[0]}: No such directory." if !(File.directory? ARGV[0])
+	if ( ARGV.empty? || ARGV[0].empty?)
+	
+		xcode.warn "please call generateDecks.rb with 1 argument that is the absolute path pointing to the Decks directory."
+	
+	end
+	
+	puts "#{ARGV[0]}: No such directory." if !(File.directory? ARGV[0])
 
 
 
