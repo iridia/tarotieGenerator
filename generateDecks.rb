@@ -3,11 +3,13 @@
 #	generateDecks.rb
 #	Evadne Wu at Iridia, 2010
 
+require 'find'
 require 'rubygems'
 
 gem 'plist', '~> 3.1.0'
 require 'Plist'
 
+require "#{File.expand_path(File.dirname(__FILE__))}/lib.XcodeBuildLogBridge/lib.XcodeBuildLogBridge.rb"
 require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 
 
@@ -19,33 +21,83 @@ require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 
 
 
-#	Data
+#	Information
 
-	Deck = {
+DECKS = {
+
+	"Rider-Smith-Waite" => {
 	
-		"Predicate" => {
+		"AllowReversals" => true,
+		"Dimensions" => [320, 520],
+		"Cards" => {
 	
-			"Title" => "Rider-Smith-Waite",
-			"Reversible" => true,
-			"Dimensions" => [320, 520]
-		
-		}, "Major Arcana" => [
-		
-			"The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor", "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit", "Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance", "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgement", "The World"
+			"Major Arcana" => [
+	
+				"The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor", "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit", "Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance", "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgement", "The World"
+				
+			], "Minor Arcana" => {
 			
-		], "Minor Arcana" => {
-		
-			"Sets" => ["Wands", "Pentacles", "Cups", "Swords"],
-			"Personae" => ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Page", "Knight", "Queen", "King"]
+				"Sets" => ["Wands", "Pentacles", "Cups", "Swords"],
+				"Personae" => ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Page", "Knight", "Queen", "King"]
+			
+			}
 		
 		}
 	
 	}
 
+}
+
+xcode = Xcode.new
 
 
 
 
+
+
+
+
+
+
+#	Bail on nil argument / empty directory
+
+if ( ARGV.empty? || ARGV[0].empty?)
+
+	xcode.warn "please call generateDecks.rb with 1 argument that is the absolute path pointing to the Decks directory."
+
+end
+
+puts "#{ARGV[0]}: No such directory." if !(File.directory? ARGV[0])
+
+
+
+
+
+TAROTIE_GENERATOR_DECKS_DIRECTORY = ARGV[0]
+xcode.log "Generating Decks using #{TAROTIE_GENERATOR_DECKS_DIRECTORY} as the root reference."
+
+
+
+
+
+DECKS.each_pair { |theDeckName, theDeck|
+
+	xcode.groupStart "Generating predicate about deck #{theDeckName}"
+	
+	if (!(File.directory? "#{TAROTIE_GENERATOR_DECKS_DIRECTORY}/#{theDeckName}"))
+
+		xcode.error "Deck #{theDeckName} does not seem to have its own directory."
+		xcode.groupEnd
+	
+	end
+	
+	xcode.log "Checking if directory exists…"
+	
+	#	Check if this directory exists
+	
+	xcode.groupEnd
+
+}
 
 
 
@@ -59,7 +111,7 @@ require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 		"sequelString" => sequelString.to_s,
 		"sequelNumber" => sequelNumber.to_i,
 		"alignment" => alignment,
-		"imageFileName" => "#{strip(alignment)}-#{strip(title)}.png"
+		"imageName" => "#{strip(alignment)}-#{strip(title)}"
 		
 	} end
 	
@@ -92,7 +144,7 @@ require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 
 
 
-#	Output
+exit
 
 	Output = {
 	
@@ -104,8 +156,6 @@ require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 
 
 
-
-#	Major Arcana
 
 	majorArcana = []
 	
@@ -134,8 +184,6 @@ require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 
 
 
-
-#	Minor Arcana
 
 	Deck['Minor Arcana']['Sets'].each { |theSetName|
 	
@@ -169,7 +217,7 @@ require "#{File.expand_path(File.dirname(__FILE__))}/lib.romanNumeral.rb"
 
 
 
-puts Output.to_plist
+# puts Output.to_plist
 
 
 

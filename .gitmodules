@@ -1,0 +1,3 @@
+[submodule "lib.XcodeBuildLogBridge"]
+	path = lib.XcodeBuildLogBridge
+	url = git://github.com/iridia/XcodeBuildLogBridge.rb.git
