@@ -24,6 +24,16 @@ TAROTIE_DECKS_DIRECTORY_NAME = "Decks"
 
 
 
+
+
+
+
+
+
+
+
+
+
 #	Information
 
 DECKS = {
@@ -51,7 +61,15 @@ DECKS = {
 
 }
 
-xcode = Xcode.new
+
+
+
+
+
+
+
+
+
 
 
 
@@ -84,6 +102,8 @@ xcode = Xcode.new
 		def self.setDeckRoot (deckRootPath = "")
 		
 			@@deckRootPath = deckRootPath
+			
+			return self
 		
 		end
 		
@@ -91,19 +111,25 @@ xcode = Xcode.new
 		
 			@@deckName = deckName
 			@@deckDirectory = "#{@@deckRootPath}/#{deckName}"
+
+			return self
 		
 		end
 		
 		def self.setDestination (destination = "")
 		
 			@@resourceDestination = destination
+			
+			return self
 		
 		end
-
+		
+		
+		
+		
+		
 		def self.process (options)
 		
-			xcode = Xcode.new
-			
 			cardDeck = @@deckName
 			cardTitle = options['title'] || ""
 			cardSequelString = options['sequelString'] || ""
@@ -115,49 +141,46 @@ xcode = Xcode.new
 
 			cardImageExtension = "png"
 			
-			cardImagePath = "#{@@deckDirectory}/#{cardImageName}.#{cardImageExtension}"
-			cardImagePath2x = "#{@@deckDirectory}/#{cardImageName}@2x.#{cardImageExtension}"
-			finalCardImagePath = "#{@@resourceDestination}/Deck-#{@@deckName}-#{finalCardImageName}.#{cardImageExtension}"
-			finalCardImagePath2x = "#{@@resourceDestination}/Deck-#{@@deckName}-#{finalCardImageName}@2x.#{cardImageExtension}"
+			cardImagePathPrefix = "#{@@deckDirectory}/"
+			cardImagePathSuffix = ".#{cardImageExtension}"
+			cardImagePathSuffix2x = "@2x.#{cardImageExtension}"
+			
+			cardImagePath = "#{cardImagePathPrefix}#{cardImageName}#{cardImagePathSuffix}"
+			cardImagePath2x = "#{cardImagePathPrefix}#{cardImageName}#{cardImagePathSuffix2x}"
+			
+			finalCardImagePathPrefix = "#{@@resourceDestination}/Deck-#{@@deckName}-"
+			
+			finalCardImagePath = "#{finalCardImagePathPrefix}#{finalCardImageName}#{cardImagePathSuffix}"
+			finalCardImagePath2x = "#{finalCardImagePathPrefix}#{finalCardImageName}#{cardImagePathSuffix2x}"
+			
+			return nil if !Xcode.assert((File.file? cardImagePath), "Original artwork for card #{cardTitle} does not exist at #{cardImagePath}.  This card will not show.")
+						
+			File.copy(cardImagePath, finalCardImagePath)
+			File.copy(cardImagePath2x, finalCardImagePath2x) if (File.file? cardImagePath2x)
+			
+			return {
+		
+				"title" => cardTitle,
+				"sequelString" => cardSequelString.to_s,
+				"sequelNumber" => cardSequelNumber.to_i,
+				"alignment" => cardAlignment,
+				"imageName" => finalCardImageName
 
-			responseObject = nil	
-			
-			if (!(File.file? cardImagePath))
-
-				xcode.warn "Original artwork for card #{cardTitle} does not exist.  This card will not show."
-				xcode.warn "#{cardImagePath}"
-				
-			else
-			
-				File.copy(cardImagePath, finalCardImagePath)
-			
-				responseObject = {
-			
-					"title" => cardTitle,
-					"sequelString" => cardSequelString.to_s,
-					"sequelNumber" => cardSequelNumber.to_i,
-					"alignment" => cardAlignment,
-					"imageName" => finalCardImageName
-
-				}
-				
-				xcode.log "Copy Deck-#{@@deckName}-#{finalCardImageName}.#{cardImageExtension}"
-			
-			end
-			
-			if (File.file? cardImagePath2x) 
-
-				File.copy(cardImagePath2x, finalCardImagePath2x)
-				xcode.log "Copy Deck-#{@@deckName}-#{finalCardImageName}@2x.#{cardImageExtension}"
-			
-			end
-				
-			
-			return responseObject
+			}
 			
 		end
 	
 	end
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -170,18 +193,23 @@ xcode = Xcode.new
 
 #	Bail on nil argument / empty directory
 
-	if ( ARGV.empty? | ARGV[0].nil? | ARGV[1].nil?)
+	exit if !Xcode.assert(
 	
-		xcode.error "Usage: generateDecks.rb <PathToDecks> <PathToResources>."
-		exit
+		!(ARGV.empty? | ARGV[0].nil? | ARGV[1].nil?), 
+		
+		"Usage: generateDecks.rb <PathToDecks> <PathToResources>."
+		
+	)
 	
-	end
+	
+	
+	
 	
 	[ARGV[0], ARGV[1]].each { |directoryPath|
 	
 		next if (File.directory? directoryPath)
 	
-		xcode.log "#{directoryPath} will be created."
+		Xcode.log "#{directoryPath} will be created."
 		File.mkpath directoryPath
 	
 	}
@@ -190,16 +218,13 @@ xcode = Xcode.new
 
 
 
-#	Wiring
-
 	TAROTIE_GENERATOR_DECKS_DIRECTORY = ARGV[0]
 	TAROTIE_GENERATOR_DESTINATION_DIRECTORY = ARGV[1]
-	Card.setDeckRoot(TAROTIE_GENERATOR_DECKS_DIRECTORY)
-	Card.setDestination(TAROTIE_GENERATOR_DESTINATION_DIRECTORY)
+
+	Card.setDeckRoot(TAROTIE_GENERATOR_DECKS_DIRECTORY).setDestination(TAROTIE_GENERATOR_DESTINATION_DIRECTORY)
 	
-	xcode.log "Generating Decks."
-	xcode.log "Decks Root: #{TAROTIE_GENERATOR_DECKS_DIRECTORY}"
-	xcode.log "Destination: #{TAROTIE_GENERATOR_DESTINATION_DIRECTORY}"
+	Xcode.log "Decks Root: #{TAROTIE_GENERATOR_DECKS_DIRECTORY}"
+	Xcode.log "Destination: #{TAROTIE_GENERATOR_DESTINATION_DIRECTORY}"
 	
 	
 	
@@ -207,37 +232,22 @@ xcode = Xcode.new
 	
 	DECKS.each_pair { |theDeckName, theDeck|
 	
-		xcode.groupStart "Deck: #{theDeckName}"
+		next if !Xcode.assert((File.directory? "#{TAROTIE_GENERATOR_DECKS_DIRECTORY}/#{theDeckName}"), "Deck #{theDeckName} does not seem to have its own directory.  This deck will not be processed.")
+		
+		next if !Xcode.assert(DECKS[theDeckName] != nil, "Deck #{theDeckName} does not have its own predicate.  This deck will not be processed.")
+			
+	
+	
+	
+	
+		Xcode.groupStart "Deck: #{theDeckName}"
+
 		Card.setDeck(theDeckName)
-		
-		if (!(File.directory? "#{TAROTIE_GENERATOR_DECKS_DIRECTORY}/#{theDeckName}"))
-	
-			xcode.error "Deck #{theDeckName} does not seem to have its own directory.  This deck will not be processed."
-			xcode.groupEnd
-			next
-		
-		end
-		
-		if (!DECKS[theDeckName])
-		
-			xcode.error "Deck #{theDeckName} does not have its own predicate.  This deck will not be processed."
-			xcode.groupEnd
-			next
-	
-		end
-	
-	
-	
-	
-	
-	#	Wiring stuff up
-	
-		
-		
-		
-		
-		
-	
+
+
+
+
+
 	#	Scaffold
 		
 		theOutput = {
@@ -255,8 +265,7 @@ xcode = Xcode.new
 		
 		theDeck.each_pair { |key, value|
 		
-			next if key == "Cards"
-			theOutput[:Predicate][key] = value
+			theOutput[:Predicate][key] = value if key != "Cards"
 		
 		}
 		
@@ -281,9 +290,7 @@ xcode = Xcode.new
 				
 			})
 			
-			next if (theCard == nil)
-							
-			majorArcana.push(theCard)
+			majorArcana.push(theCard) if (theCard != nil)
 		
 		}
 		
@@ -317,9 +324,7 @@ xcode = Xcode.new
 				
 				})
 				
-				next if (theCard == nil)
-			
-				theSequel.push(theCard)
+				theSequel.push(theCard) if (theCard != nil)
 				
 			}
 			
@@ -336,10 +341,15 @@ xcode = Xcode.new
 
 	#	Save
 		
+		Xcode.log "Create Deck-#{theDeckName}-Predicate.plist"
+
 		Plist::Emit.save_plist(theOutput, "#{TAROTIE_GENERATOR_DESTINATION_DIRECTORY}/Deck-#{theDeckName}-Predicate.plist")
-		xcode.log "Create Deck-#{theDeckName}-Predicate.plist"
 		
-		xcode.groupEnd
+		
+		
+		
+		
+		Xcode.groupEnd
 	
 	}
 
@@ -349,7 +359,7 @@ xcode = Xcode.new
 
 	#	Shared Deck
 	
-	xcode.groupStart "Processing the Shared deck."
+	Xcode.groupStart "Processing the Shared deck."
 	
 		Card.setDeck("Shared")
 		
@@ -365,7 +375,7 @@ xcode = Xcode.new
 		
 		})
 	
-	xcode.groupEnd
+	Xcode.groupEnd
 
 
 
