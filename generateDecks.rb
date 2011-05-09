@@ -107,10 +107,11 @@ DECKS = {
 		
 		end
 		
-		def self.setDeck (deckName = "")
+		def self.setDeck (deckName = "", deckType = "png")
 		
 			@@deckName = deckName
 			@@deckDirectory = "#{@@deckRootPath}/#{deckName}"
+			@@deckType = deckType
 
 			return self
 		
@@ -139,7 +140,7 @@ DECKS = {
 			cardImageName = "#{strip(cardAlignment)}#{cardAlignment.empty? ? "" : "-"}#{strip(cardTitle)}"
 			finalCardImageName = "#{strip(cardAlignment, "-")}#{cardAlignment.empty? ? "" : "-"}#{strip(cardTitle, "-")}"
 
-			cardImageExtension = "png"
+			cardImageExtension = @@deckType || "png"
 			
 			cardImagePathPrefix = "#{@@deckDirectory}/"
 			cardImagePathSuffix = ".#{cardImageExtension}"
@@ -242,7 +243,7 @@ DECKS = {
 	
 		Xcode.groupStart "Deck: #{theDeckName}"
 
-		Card.setDeck(theDeckName)
+		Card.setDeck(theDeckName, "jpg")
 
 
 
@@ -361,7 +362,7 @@ DECKS = {
 	
 	Xcode.groupStart "Processing the Shared deck."
 	
-		Card.setDeck("Shared")
+		Card.setDeck("Shared", "png")
 		
 		Card.process({
 		
