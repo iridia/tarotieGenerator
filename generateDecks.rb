@@ -165,7 +165,7 @@ DECKS = {
 				"sequelString" => cardSequelString.to_s,
 				"sequelNumber" => cardSequelNumber.to_i,
 				"alignment" => cardAlignment,
-				"imageName" => finalCardImageName
+				"imageName" => finalCardImageName + "." + cardImageExtension
 
 			}
 			
