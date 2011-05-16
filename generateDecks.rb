@@ -4,7 +4,7 @@
 #	Evadne Wu at Iridia, 2010
 
 require 'find'
-require 'ftools'
+require 'fileutils'
 require 'rubygems'
 
 gem 'plist', '~> 3.1.0'
@@ -156,8 +156,8 @@ DECKS = {
 			
 			return nil if !Xcode.assert((File.file? cardImagePath), "Original artwork for card #{cardTitle} does not exist at #{cardImagePath}.  This card will not show.")
 						
-			File.copy(cardImagePath, finalCardImagePath)
-			File.copy(cardImagePath2x, finalCardImagePath2x) if (File.file? cardImagePath2x)
+			FileUtils.cp(cardImagePath, finalCardImagePath)
+			FileUtils.cp(cardImagePath2x, finalCardImagePath2x) if (File.file? cardImagePath2x)
 			
 			return {
 		
