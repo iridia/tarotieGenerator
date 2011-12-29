@@ -57,6 +57,27 @@ DECKS = {
 		
 		}
 	
+	},
+	
+	"1910-Pamela-A" => {
+	
+		"AllowReversals" => true,
+		"Dimensions" => [270, 468],
+		"Cards" => {
+	
+			"Major Arcana" => [
+	
+				"The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor", "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit", "Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance", "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgement", "The World"
+				
+			], "Minor Arcana" => {
+			
+				"Sets" => ["Wands", "Pentacles", "Cups", "Swords"],
+				"Personae" => ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Page", "Knight", "Queen", "King"]
+			
+			}
+		
+		}
+	
 	}
 
 }
